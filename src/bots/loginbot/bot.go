@@ -220,6 +220,8 @@ func dleRequest(action string, tgID int64, subscription string) (dt string, err 
 	defer resp.Body.Close()
 	body, err := io.ReadAll(resp.Body)
 
+	log.Println(string(body))
+
 	r := dleResponse{}
 	if err = json.Unmarshal(body, &r); err != nil {
 		log.Println("error unmarshal:", err)
