@@ -194,7 +194,7 @@ func NewBot(dbService *database.Service, botId int, token string) {
 }
 
 func dleRequest(action string, tgID int64, subscription string) (dt string, err error) {
-	q := fmt.Sprintf("https://odminko.printhouse.casa/engine/ajax/controller.php?mod=telegram&?action=%s&tg_id=%d&subscription=%s", action, tgID, subscription)
+	q := fmt.Sprintf("https://odminko.printhouse.casa/engine/ajax/controller.php?mod=telegram&action=%s&tgid=%d&subscription=%s", action, tgID, subscription)
 	//q := fmt.Sprintf("https://proxy.cis-dle.orb.local/engine/ajax/controller.php?mod=telegram&action=%s&tgid=%d&subscription=%s", action, tgID, subscription)
 	log.Println(q)
 	req, err := http.NewRequest("GET", q, nil)
