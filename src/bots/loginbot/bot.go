@@ -65,6 +65,39 @@ func NewBot(dbService *database.Service, botId int, token string) {
 	})
 
 	// On inline button pressed (callback)
+	b.Handle("/test10m", func(c tele.Context) error {
+		database.TelegramLogCreate(dbService, botId, c.Sender().ID, "[test10min]", 1)
+		log.Println("payment request!")
+		invoice := &tele.Invoice{
+			Title:       "Премиум доступ на 10 минут",
+			Description: "отключение рекламы",
+			Payload:     "subscription_test_1",
+			Currency:    "XTR",
+			Total:       1,
+			Prices: []tele.Price{
+				{Label: "adv free", Amount: 1},
+			},
+		}
+		database.TelegramLogCreate(dbService, botId, c.Sender().ID, "invoice_test_1", 0)
+		return c.Send(invoice)
+	})
+	b.Handle("/test24h", func(c tele.Context) error {
+		database.TelegramLogCreate(dbService, botId, c.Sender().ID, "[test24h]", 1)
+		log.Println("payment request!")
+		invoice := &tele.Invoice{
+			Title:       "Премиум доступ на 24 часа",
+			Description: "отключение рекламы",
+			Payload:     "subscription_test_2",
+			Currency:    "XTR",
+			Total:       1,
+			Prices: []tele.Price{
+				{Label: "adv free", Amount: 1},
+			},
+		}
+		database.TelegramLogCreate(dbService, botId, c.Sender().ID, "invoice_test_2", 0)
+		return c.Send(invoice)
+	})
+
 	b.Handle(&btnSubscribe1, func(c tele.Context) error {
 		database.TelegramLogCreate(dbService, botId, c.Sender().ID, "[btnSubscribe1]", 1)
 		log.Println("payment request!")
@@ -141,6 +174,12 @@ func NewBot(dbService *database.Service, botId int, token string) {
 	b.Handle("/me", func(c tele.Context) error {
 		database.TelegramLogCreate(dbService, botId, c.Sender().ID, "/hello", 1)
 		return c.Send("ID:" + fmt.Sprintf("%d", c.Sender().ID))
+	})
+
+	b.Handle("/remove_premium", func(c tele.Context) error {
+		database.TelegramLogCreate(dbService, botId, c.Sender().ID, "/remove_premium", 1)
+		dleRequest("remove_premium", c.Sender().ID, "")
+		return c.Send("все, у тебя нет премиума!")
 	})
 
 	// b.Handle("/link", func(c tele.Context) error {
