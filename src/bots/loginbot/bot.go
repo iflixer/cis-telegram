@@ -236,7 +236,7 @@ func dleRequest(action string, tgID int64, subscription string) (dt string, err 
 	q := fmt.Sprintf("https://odminko.printhouse.casa/engine/ajax/controller.php?mod=telegram&action=%s&tgid=%d&subscription=%s", action, tgID, subscription)
 	//q := fmt.Sprintf("https://proxy.cis-dle.orb.local/engine/ajax/controller.php?mod=telegram&action=%s&tgid=%d&subscription=%s", action, tgID, subscription)
 	log.Println(q)
-	req, err := http.NewRequest("GET", q, nil)
+	req, err := http.NewRequest("POST", q, nil)
 
 	type dleResponse struct {
 		Status  string `json:"status"`
