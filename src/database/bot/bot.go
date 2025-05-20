@@ -127,6 +127,7 @@ func (s *Service) Send(botID int, chatID int64, msg string) (err error) {
 func (s *Service) loadData() (err error) {
 	var results []*Bot
 	if err = s.dbService.DB.Where("published=1").Find(&results).Error; err == nil {
+		log.Println("loadData bots found:", len(results))
 		s.mu.Lock()
 		for _, botNew := range results {
 			if botOld, ok := s.bots[botNew.ID]; ok { // update old bot?
@@ -138,9 +139,9 @@ func (s *Service) loadData() (err error) {
 				log.Println("yes")
 				botOld.Kill()
 			}
-			log.Println("new bot", botNew.ID, botNew.Name)
 			botNew.Register(s.dbService, s.settingsService)
 			s.bots[botNew.ID] = botNew
+			log.Println("bot registered:", botNew.ID, botNew.Name)
 		}
 		log.Println("bots loaded:", len(s.bots))
 		s.mu.Unlock()
