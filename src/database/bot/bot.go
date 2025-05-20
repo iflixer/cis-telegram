@@ -1,9 +1,11 @@
 package bot
 
 import (
-	telebot "cis-telegram/bots/loginbot"
+	appbot "cis-telegram/bots/appbot"
+	loginbot "cis-telegram/bots/loginbot"
 	"cis-telegram/database"
 	"cis-telegram/database/settings"
+	"fmt"
 	"log"
 	"sync"
 	"time"
@@ -30,6 +32,7 @@ type Post struct {
 type Bot struct {
 	ID              int
 	Name            string
+	Type            string
 	BotURL          string
 	AppURL          string
 	Description     string
@@ -50,10 +53,18 @@ func (b *Bot) TableName() string {
 }
 
 func (b *Bot) Register(dbService *database.Service, settingsService *settings.Service) (err error) {
+	switch b.Type {
+	case "loginbot":
+		loginbot.NewBot(dbService, b.ID, b.Token)
+		b.api, err = tgbotapi.NewBotAPI(b.Token)
 
-	telebot.NewBot(dbService, b.ID, b.Token)
+	case "appbot":
+		appbot.NewBot(dbService, b.ID, b.Token)
+		b.api, err = tgbotapi.NewBotAPI(b.Token)
+	default:
+		return fmt.Errorf("unknown bot type %s", b.Type)
+	}
 
-	b.api, err = tgbotapi.NewBotAPI(b.Token)
 	if b.api == nil {
 		log.Printf("Failed register bot %d, err: %s", b.ID, err.Error())
 		return
@@ -127,7 +138,7 @@ func (s *Service) loadData() (err error) {
 				log.Println("yes")
 				botOld.Kill()
 			}
-			log.Println("new bot")
+			log.Println("new bot", botNew.ID, botNew.Name)
 			botNew.Register(s.dbService, s.settingsService)
 			s.bots[botNew.ID] = botNew
 		}

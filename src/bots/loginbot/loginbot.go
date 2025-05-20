@@ -1,4 +1,4 @@
-package telebot
+package loginbot
 
 import (
 	"cis-telegram/database"
