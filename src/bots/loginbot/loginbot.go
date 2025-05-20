@@ -16,15 +16,14 @@ type TeleBot struct {
 	Token string
 }
 
-func NewBot(dbService *database.Service, botId int, token string) {
+func NewBot(dbService *database.Service, botId int, token string) (err error) {
 	pref := tele.Settings{
 		Token:  token,
 		Poller: &tele.LongPoller{Timeout: 10 * time.Second},
 	}
-
 	b, err := tele.NewBot(pref)
+
 	if err != nil {
-		log.Fatal(err)
 		return
 	}
 	//middleware.Recover()
@@ -229,7 +228,8 @@ func NewBot(dbService *database.Service, botId int, token string) {
 		return c.Reply("Пардоне муа, не понимаю", menu)
 	})
 
-	b.Start()
+	go b.Start()
+	return
 }
 
 func dleRequest(action string, tgID int64, subscription string) (dt string, err error) {

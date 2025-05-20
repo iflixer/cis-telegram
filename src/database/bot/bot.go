@@ -55,11 +55,17 @@ func (b *Bot) TableName() string {
 func (b *Bot) Register(dbService *database.Service, settingsService *settings.Service) (err error) {
 	switch b.Type {
 	case "loginbot":
-		loginbot.NewBot(dbService, b.ID, b.Token)
+		err = loginbot.NewBot(dbService, b.ID, b.Token)
+		if err != nil {
+			return
+		}
 		b.api, err = tgbotapi.NewBotAPI(b.Token)
 
 	case "appbot":
-		appbot.NewBot(dbService, b.ID, b.Token)
+		err = appbot.NewBot(dbService, b.ID, b.Token)
+		if err != nil {
+			return
+		}
 		b.api, err = tgbotapi.NewBotAPI(b.Token)
 	default:
 		return fmt.Errorf("unknown bot type %s", b.Type)
@@ -73,7 +79,6 @@ func (b *Bot) Register(dbService *database.Service, settingsService *settings.Se
 	b.settingsService = settingsService
 	b.quit = make(chan bool)
 	b.listen()
-	log.Printf("registered bot %d", b.ID)
 	return
 }
 
@@ -126,8 +131,8 @@ func (s *Service) Send(botID int, chatID int64, msg string) (err error) {
 
 func (s *Service) loadData() (err error) {
 	var results []*Bot
+	log.Println("======= loading bots...")
 	if err = s.dbService.DB.Where("published=1").Find(&results).Error; err == nil {
-		log.Println("loadData bots found:", len(results))
 		s.mu.Lock()
 		for _, botNew := range results {
 			if botOld, ok := s.bots[botNew.ID]; ok { // update old bot?
@@ -139,12 +144,17 @@ func (s *Service) loadData() (err error) {
 				log.Println("yes")
 				botOld.Kill()
 			}
-			botNew.Register(s.dbService, s.settingsService)
+			err = botNew.Register(s.dbService, s.settingsService)
+			if err != nil {
+				log.Println("failed to register bot:", botNew.ID, botNew.Name, err)
+				continue
+			}
 			s.bots[botNew.ID] = botNew
 			log.Println("bot registered:", botNew.ID, botNew.Name)
 		}
 		log.Println("bots loaded:", len(s.bots))
 		s.mu.Unlock()
 	}
+	log.Println("======= loading bots...DONE")
 	return
 }
