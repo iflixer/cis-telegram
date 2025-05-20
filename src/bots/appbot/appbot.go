@@ -29,14 +29,16 @@ func NewBot(dbService *database.Service, botId int, token string) (err error) {
 	menu := &tele.ReplyMarkup{ResizeKeyboard: true}
 	//selector := &tele.ReplyMarkup{}
 	// Reply buttons.
-	btn1 := menu.Text("b1")
-	btn2 := menu.Text("b2")
-	btn3 := menu.Text("b3")
-	btn4 := menu.Text("b4")
+	btn1 := menu.Text("Сайт Пиратки")
+	btn2 := menu.Text("Кино в telegram")
+	btn3 := menu.Text("Скачать приложение")
+	btn4 := menu.Text("Подписаться")
+	btn5 := menu.Text("Связаться с нами")
 
 	menu.Reply(
 		menu.Row(btn1, btn2),
 		menu.Row(btn3, btn4),
+		menu.Row(btn5),
 	)
 
 	// selector.Inline(
@@ -50,8 +52,23 @@ func NewBot(dbService *database.Service, botId int, token string) (err error) {
 	})
 
 	b.Handle(&btn1, func(c tele.Context) error {
-		database.TelegramLogCreate(dbService, botId, c.Sender().ID, "[btnHelp]", 1)
-		return c.Send("т1", menu)
+		return c.Send("Смотри лучшие фильмы и сериалы на сайте https://piratka.me", menu)
+	})
+
+	b.Handle(&btn2, func(c tele.Context) error {
+		return c.Send("Смотри лучшие фильмы и сериалы в telegram приложении https://t.me/piratka_me_app_bot/app?startapp=default", menu)
+	})
+
+	b.Handle(&btn3, func(c tele.Context) error {
+		return c.Send("Скачай приложение для android https://apk.piratka.me/engine/ajax/controller.php?mod=download_apk", menu)
+	})
+
+	b.Handle(&btn4, func(c tele.Context) error {
+		return c.Send("Загляни в канал", menu)
+	})
+
+	b.Handle(&btn4, func(c tele.Context) error {
+		return c.Send("Напиши сообщение и мы его получим:", menu)
 	})
 
 	b.Handle("/hello", func(c tele.Context) error {
