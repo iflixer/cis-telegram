@@ -47,7 +47,7 @@ func NewBot(dbService *database.Service, botId int, token string) (err error) {
 
 	b.Handle("/start", func(c tele.Context) error {
 		err := c.Send("Приветы. Я Кок, помощник Пиратки. Помогу найти что посмотреть", menu)
-		database.TelegramLogCreate(dbService, botId, c.Sender().ID, "/start", 1)
+		//database.TelegramLogCreate(dbService, botId, c.Sender().ID, "/start", 1)
 		return err
 	})
 
@@ -67,7 +67,7 @@ func NewBot(dbService *database.Service, botId int, token string) (err error) {
 		return c.Send("Загляни в канал", menu)
 	})
 
-	b.Handle(&btn4, func(c tele.Context) error {
+	b.Handle(&btn5, func(c tele.Context) error {
 		return c.Send("Напиши сообщение и мы его получим:", menu)
 	})
 
