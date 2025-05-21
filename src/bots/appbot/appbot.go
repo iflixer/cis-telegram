@@ -32,7 +32,7 @@ func NewBot(dbService *database.Service, botId int, token string) (err error) {
 	btn1 := menu.Text("Сайт Пиратки")
 	btn2 := menu.Text("Кино в telegram")
 	btn3 := menu.Text("Скачать приложение")
-	btn4 := menu.Text("Подписаться")
+	btn4 := menu.Text("Подписаться на обновления")
 	btn5 := menu.Text("Связаться с нами")
 
 	menu.Reply(
