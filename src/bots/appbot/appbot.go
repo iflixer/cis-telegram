@@ -64,7 +64,7 @@ func NewBot(dbService *database.Service, botId int, token string) (err error) {
 	})
 
 	b.Handle(&btn4, func(c tele.Context) error {
-		return c.Send("Загляни в канал", menu)
+		return c.Send("Загляни в канал https://t.me/piratka_me", menu)
 	})
 
 	b.Handle(&btn5, func(c tele.Context) error {
