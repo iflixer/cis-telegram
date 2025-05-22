@@ -1,8 +1,13 @@
 package appbot
 
 import (
+	"bytes"
 	"cis-telegram/database"
 	"fmt"
+	"io"
+	"log"
+	"net/http"
+	"net/url"
 	"time"
 
 	tele "gopkg.in/telebot.v4"
@@ -13,6 +18,10 @@ type TeleBot struct {
 }
 
 func NewBot(dbService *database.Service, botId int, token string) (err error) {
+
+	dleComplain("test", 123456789)
+	return
+
 	pref := tele.Settings{
 		Token:  token,
 		Poller: &tele.LongPoller{Timeout: 10 * time.Second},
@@ -68,7 +77,7 @@ func NewBot(dbService *database.Service, botId int, token string) (err error) {
 	})
 
 	b.Handle(&btn5, func(c tele.Context) error {
-		return c.Send("Напиши сообщение и мы его получим:", menu)
+		return c.Send("Напиши сообщение больше 10 символов и мы его получим:", menu)
 	})
 
 	b.Handle("/hello", func(c tele.Context) error {
@@ -83,9 +92,45 @@ func NewBot(dbService *database.Service, botId int, token string) (err error) {
 
 	b.Handle(tele.OnText, func(c tele.Context) error {
 		database.TelegramLogCreate(dbService, botId, c.Sender().ID, c.Text(), 0)
+
+		text := c.Text()
+		if len(text) > 10 {
+			dleComplain(text, c.Sender().ID)
+			return c.Reply("Сообщение отправлено, мы его обязательно прочитаем", menu)
+		}
 		return c.Reply("Пардоне муа, не понимаю", menu)
 	})
 
 	go b.Start()
+	return
+}
+
+func dleComplain(message string, tgID int64) (err error) {
+	q := "https://odminko.printhouse.casa/engine/ajax/controller.php?mod=feedback&skip_captcha=fhduwiebu4377rdgegt"
+	// q := "https://proxy.cis-dle.orb.local/engine/ajax/controller.php?mod=feedback&skip_captcha=fhduwiebu4377rdgegt"
+	log.Println(q)
+
+	data := url.Values{}
+	data.Set("email", fmt.Sprintf("%d@telegram.me", tgID))
+	data.Set("recip", "1")
+	data.Set("subject", "message from tg bot")
+	data.Set("message", message)
+
+	req, err := http.NewRequest("POST", q, bytes.NewBufferString(data.Encode()))
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+
+	log.Println(string(body))
+
 	return
 }
