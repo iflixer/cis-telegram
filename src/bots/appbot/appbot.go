@@ -19,12 +19,11 @@ type TeleBot struct {
 
 func NewBot(dbService *database.Service, botId int, token string) (err error) {
 
-	dleComplain("test", 123456789)
-	return
-
 	pref := tele.Settings{
 		Token:  token,
 		Poller: &tele.LongPoller{Timeout: 10 * time.Second},
+		// URL:    &url.URL{Path: "/webhook"},
+		// Poller: &webhook.Webhook{Listen: ":443"},
 	}
 
 	b, err := tele.NewBot(pref)
@@ -54,8 +53,20 @@ func NewBot(dbService *database.Service, botId int, token string) (err error) {
 	// 	selector.Row(btnPrev, btnNext),
 	// )
 
+	inline := &tele.ReplyMarkup{}
+	btn1inline := inline.URL("Сайт Пиратки", "https://piratka.me")
+	btn2inline := inline.URL("Кино в telegram", "https://t.me/piratka_me_app_bot/app?startapp=default")
+	btn3inline := inline.URL("Скачать приложение", "https://apk.piratka.me/engine/ajax/controller.php?mod=download_apk")
+	btn4inline := inline.URL("Подписаться на обновления", "https://t.me/piratka_me")
+
+	inline.Inline(
+		inline.Row(btn1inline, btn2inline),
+		inline.Row(btn3inline, btn4inline),
+		inline.Row(btn5),
+	)
+
 	b.Handle("/start", func(c tele.Context) error {
-		err := c.Send("Приветы. Я Кок, помощник Пиратки. Помогу найти что посмотреть", menu)
+		err := c.Send("Приветы. Я Кок, помощник Пиратки. Помогу найти что посмотреть", inline)
 		//database.TelegramLogCreate(dbService, botId, c.Sender().ID, "/start", 1)
 		return err
 	})
@@ -96,9 +107,9 @@ func NewBot(dbService *database.Service, botId int, token string) (err error) {
 		text := c.Text()
 		if len(text) > 10 {
 			dleComplain(text, c.Sender().ID)
-			return c.Reply("Сообщение отправлено, мы его обязательно прочитаем", menu)
+			return c.Reply("Сообщение отправлено, мы его обязательно прочитаем", inline)
 		}
-		return c.Reply("Пардоне муа, не понимаю", menu)
+		return c.Reply("Пардоне муа, не понимаю", inline)
 	})
 
 	go b.Start()
@@ -113,7 +124,7 @@ func dleComplain(message string, tgID int64) (err error) {
 	data := url.Values{}
 	data.Set("email", fmt.Sprintf("%d@telegram.me", tgID))
 	data.Set("recip", "1")
-	data.Set("subject", "message from tg bot")
+	data.Set("subject", "tg bot")
 	data.Set("message", message)
 
 	req, err := http.NewRequest("POST", q, bytes.NewBufferString(data.Encode()))
