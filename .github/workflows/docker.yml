@@ -47,7 +47,7 @@ jobs:
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           script: |
             set -e
-            cd /home/ivanezko/cis-swarm && ./deploy.sh cis/dle.yml
+            cd /home/ivanezko/cis-swarm && ./deploy.sh cis/telegram.yml
 
             # docker service update --image ${{ secrets.DOCKERHUB_USERNAME }}/cis-telegram:latest myapp_service || \
             # docker stack deploy -c docker-compose.yml myapp
