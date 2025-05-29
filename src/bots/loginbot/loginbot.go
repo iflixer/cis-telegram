@@ -44,7 +44,7 @@ func NewBot(dbService *database.Service, botId int, token string) (err error) {
 	// btnNext := selector.Data("➡", "next")
 
 	btn1 := menu.Text("Трюм - канал новинок")
-	btn2 := menu.Text("База в Телеграм ")
+	btn2 := menu.Text("База в Телеграм")
 	btn3 := menu.Text("Тортуга - сайт")
 	btn4 := menu.Text("Contact us")
 
