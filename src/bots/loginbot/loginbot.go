@@ -52,10 +52,8 @@ func NewBot(dbService *database.Service, botId int, token string) (err error) {
 		// menu.Row(btnSubscribe1, btnSubscribe2, btnSubscribe3),
 		// menu.Row(btnStatus),
 		// menu.Row(btnHelp),
-		menu.Row(btn1),
-		menu.Row(btn2),
-		menu.Row(btn3),
-		menu.Row(btn4),
+		menu.Row(btn1, btn2),
+		menu.Row(btn3, btn4),
 	)
 
 	inline := &tele.ReplyMarkup{}
@@ -75,7 +73,8 @@ func NewBot(dbService *database.Service, botId int, token string) (err error) {
 	// )
 
 	b.Handle("/start", func(c tele.Context) (err error) {
-		c.Send("<> Добро пожаловать на борт!\n\n"+
+		userName := c.Sender().Username
+		c.Send(userName+"! Добро пожаловать на борт!\n\n"+
 			"Для тебя любое кино и сериалы без ограничений!\n"+
 			"Смотри в любом формате и месте - Пиратка добудет все!\n\n"+
 			"В этом боте я сообщу тебе о всех новинках сериалов и анонсов, которые ты поместил в Избранное.\n\n"+
