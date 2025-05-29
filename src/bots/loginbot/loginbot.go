@@ -59,10 +59,10 @@ func NewBot(dbService *database.Service, botId int, token string) (err error) {
 	)
 
 	inline := &tele.ReplyMarkup{}
-	btn1inline := inline.URL("Сайт Пиратки", "https://piratka.me")
-	btn2inline := inline.URL("Кино в telegram", "https://t.me/piratka_me_app_bot/app?startapp=default")
-	btn3inline := inline.URL("Скачать приложение", "https://apk.piratka.me/engine/ajax/controller.php?mod=download_apk")
-	btn4inline := inline.URL("Подписаться на обновления", "https://t.me/piratka_me")
+	btn1inline := inline.URL("Источник вечной молодости", "https://piratka.me/movies/128180-istochnik-vechnoj-molodosti.html")
+	btn2inline := inline.URL("Микки 17", "https://piratka.me/movies/126760-mikki-17.html")
+	btn3inline := inline.URL("Любовь, смерть и роботы", "https://piratka.me/series/106955-ljubov-smert-i-roboty.html")
+	btn4inline := inline.URL("Настоящие детективы", "https://piratka.me/movies/127901-nastojaschie-detektivy.html")
 
 	inline.Inline(
 		inline.Row(btn1inline),
@@ -78,8 +78,8 @@ func NewBot(dbService *database.Service, botId int, token string) (err error) {
 		c.Send("<> Добро пожаловать на борт!\n\n"+
 			"Для тебя любое кино и сериалы без ограничений!\n"+
 			"Смотри в любом формате и месте - Пиратка добудет все!\n\n"+
-			"В этом боте я сообщу тебе о всех новинках сериалов и анонсов, которые ты поместил в Избранное.\n"+
-			"На моем корабле ты найдешь:\n\n"+
+			"В этом боте я сообщу тебе о всех новинках сериалов и анонсов, которые ты поместил в Избранное.\n\n"+
+			"На моем корабле ты найдешь:\n"+
 			"Трюм - канал в котором вся информация о моей самой свежей добыче - все последние новинки\n"+
 			"База в Телеграм - не выходя из Телеграма проводи время с удовольствием - смотри кино с удовольствием\n"+
 			"Пиратка APК - приложение на твоем телефоне - твои любимые фильмы всегда под рукой\n"+
