@@ -60,7 +60,7 @@ jobs:
             -d '{
               "chat_id": "'"${{ secrets.TG_CHAT_ID }}"'",
               "parse_mode": "Markdown",
-              "text": "✅ *Docker образы успешно опубликованы!*\n\n📦 Образы:\n- `${{ secrets.DOCKERHUB_USERNAME }}/cis-telegram:latest`\n\n🧑 Коммит: `${{ steps.vars.outputs.commit }}`\n🏷️ Тег: `${{ steps.vars.outputs.tag }}`",
+              "text": "✅ Деплой!\n- `${{ secrets.DOCKERHUB_USERNAME }}/cis-telegram:latest`\n\n🧑 Коммит: `${{ steps.vars.outputs.commit }}`\n🏷️ Тег: `${{ steps.vars.outputs.tag }}`",
               "reply_markup": {
                 "inline_keyboard": [[
                   {
