@@ -321,7 +321,7 @@ func dleComplain(message string, tgID int64) (err error) {
 	data := url.Values{}
 	data.Set("email", fmt.Sprintf("%d@telegram.me", tgID))
 	data.Set("recip", "1")
-	data.Set("subject", "tg bot")
+	data.Set("subject", "tg loginbot")
 	data.Set("message", message)
 
 	req, err := http.NewRequest("POST", q, bytes.NewBufferString(data.Encode()))
