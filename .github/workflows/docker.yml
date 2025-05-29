@@ -38,6 +38,19 @@ jobs:
             --build-arg SOURCE_TAG=${{ steps.vars.outputs.tag }} \
             . | tee build.log
 
+      - name: Deploy to Docker Swarm
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.DEPLOY_SSH_HOST }}
+          username: ${{ secrets.DEPLOY_SSH_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script: |
+            cd /home/ivanezko/cis-swarm || \
+            ./deploy.sh cis/dle.yml
+
+            # docker service update --image ${{ secrets.DOCKERHUB_USERNAME }}/cis-telegram:latest myapp_service || \
+            # docker stack deploy -c docker-compose.yml myapp
+
       - name: Notify Telegram
         if: success()
         run: |
@@ -76,3 +89,4 @@ jobs:
                 ]]
               }
             }'
+
