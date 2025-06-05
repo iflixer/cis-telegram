@@ -89,7 +89,7 @@ func NewBot(dbService *database.Service, botId int, token string) (err error) {
 	})
 
 	b.Handle(&btn1, func(c tele.Context) error {
-		return c.Send("Трюм @new_movie_hd_4k_h_bot", menu)
+		return c.Send("Трюм @piratka_me", menu)
 	})
 
 	b.Handle(&btn2, func(c tele.Context) error {
