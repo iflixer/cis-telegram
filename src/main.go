@@ -59,9 +59,9 @@ func main() {
 	}
 
 	botService, err := bot.NewService(dbService, settingsService, 60)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 	_ = botService
 
 	/*telegramService, err := telegram.NewService(telegramApiToken, dbService, settingsService)
