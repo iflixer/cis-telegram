@@ -58,7 +58,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	botService, err := bot.NewService(dbService, settingsService, 60)
+	botService, _ := bot.NewService(dbService, settingsService, 60)
 	// if err != nil {
 	// 	log.Fatal(err)
 	// }
