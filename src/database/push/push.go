@@ -60,7 +60,7 @@ func NewService(dbService *database.Service, botService *bot.Service) (s *Servic
 		botService: botService,
 		state:      "sleep",
 	}
-	go s.workerSender()
+	//go s.workerSender()
 	return
 }
 
@@ -95,6 +95,7 @@ func (s *Service) send() (affected int, err error) {
 		if err = s.dbService.DB.Where("id=?", push.AudienceID).Limit(1).First(&audience).Error; err != nil {
 			return
 		}
+
 		// helper.P(audience)
 		// get users
 		if err = s.dbService.DB.Where("bot_id=? AND push_id != ? AND disabled=0", push.BotID, push.ID).Where(audience.Query).Limit(20).Find(&users).Error; err != nil {
