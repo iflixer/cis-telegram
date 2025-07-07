@@ -60,7 +60,7 @@ func NewService(dbService *database.Service, botService *bot.Service) (s *Servic
 		botService: botService,
 		state:      "sleep",
 	}
-	go s.workerSender()
+	//go s.workerSender()
 	return
 }
 
